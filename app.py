@@ -21,13 +21,6 @@ class notice(db.Model):
 
 with app.app_context():
     db.create_all()
-    
-with app.app_context():
-    db.create_all()
-
-with app.app_context():
-    db.create_all()
-
 
 @app.route("/toppage/")
 def toppage():
@@ -48,5 +41,17 @@ def post_create():
     # 위에서부터 DB와 연결하여 데이터를 보내고, 테이블을 추가하고, 커밋하여 저장하는 기능을 합니다.
     # 커밋 코드는 html에서 데이터를 받아 반환해 주는(?) 기능을 합니다.
     # 마지막 코드는 자동 리다이렉트로 작성한 게시글이 바로바로 반영되게 만들어 줍니다.
+    
+@app.route('/delete/<int:noticeID>')
+# noticeID 가 Null일 경우 처리
+# @app.route('/delete', defaults={'noticeID': None})
+def delete(noticeID):
+    notice_delete = notice.query.filter_by(noticeID=int(noticeID)).first()
+
+    db.session.delete(notice_delete)
+    db.session.commit()
+
+    return redirect(url_for('toppage'))
+
 if __name__ == "__main__":
     app.run(debug=True)
