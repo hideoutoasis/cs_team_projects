@@ -6,9 +6,10 @@ from flask_sqlalchemy import SQLAlchemy
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] =\
-        'sqlite:///' + os.path.join(basedir, 'database.db')
+    'sqlite:///' + os.path.join(basedir, 'database.db')
 
 db = SQLAlchemy(app)
+
 
 class notice(db.Model):
     noticeID = db.Column(db.Integer, primary_key=True)
@@ -19,13 +20,17 @@ class notice(db.Model):
         return f'{self.noticeTitle} {self.noticeContents}'
     # 게시판 DB테이블 설계부분입니다.
 
+
 with app.app_context():
     db.create_all()
 
+
+@app.route("/")
 @app.route("/")
 def toppage():
     notice_list = notice.query.all()
     return render_template('toppage.html', data=notice_list)
+
 
 @app.route("/toppage/create/")
 def post_create():
@@ -33,7 +38,8 @@ def post_create():
     content_receieve = request.args.get("noticeContents")
     # form에서 보낸 데이터 받아오는 부분입니다.
 
-    noticetable = notice(noticeTitle=title_receieve, noticeContents=content_receieve)
+    noticetable = notice(noticeTitle=title_receieve,
+                         noticeContents=content_receieve)
     db.session.add(noticetable)
     db.session.commit()
     return redirect(url_for('toppage', noticeTitle=title_receieve))
@@ -64,6 +70,7 @@ def post_update(noticeID):
     # POST 요청이 아닌 경우에는 해당 페이지로 진입하지 못하도록 리디렉션합니다.
     return redirect(url_for('toppage'))
 
+
 @app.route('/toppage/delete/<int:noticeID>')
 # noticeID 가 Null일 경우 처리
 # @app.route('/delete', defaults={'noticeID': None})
@@ -74,6 +81,7 @@ def post_delete(noticeID):
     db.session.commit()
 
     return redirect(url_for('toppage'))
+
 
 if __name__ == "__main__":
     app.run(debug=True)

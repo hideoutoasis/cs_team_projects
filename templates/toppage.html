@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>TopPage</title>
@@ -16,15 +17,32 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
+        @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css');
+
+        .background-banner {
+            background-image: linear-gradient(45deg, rgb(51 43 43 / 75%), rgb(20 19 20 / 61%)), url(' ');
+            max-height: 100%;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
     </style>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+</head>
 </head>
 
 <body data-bs-theme="dark">
 <div class="">
     <div class="row row-cols-1 row-cols-md-3 g-3 mx-auto w-75 pb-5" style="padding-top: 250px">
+<body data-bs-theme="dark">
+<div class="">
+    <div class="row row-cols-1 row-cols-md-3 g-3 mx-auto w-75 pb-5" style="padding-top: 250px">
         <div class="col" style="padding-right: 20px">
+            <div class="card h-100">
+                <img src="https://s3.ap-northeast-2.amazonaws.com/materials.spartacodingclub.kr/webjong/ive.jpg" class="card-img-top" alt="..." />
+            </div>
             <div class="card h-100">
                 <img src="https://s3.ap-northeast-2.amazonaws.com/materials.spartacodingclub.kr/webjong/ive.jpg" class="card-img-top" alt="..." />
             </div>
@@ -35,8 +53,19 @@
                     <img src="https://s3.ap-northeast-2.amazonaws.com/materials.spartacodingclub.kr/webjong/ive.jpg" class="card-img-top" alt="..." />
                 </div>
             </button>
+            <button onclick="goToScroll('notice-scroll')" type="button" data-bs-target="#exampleModal">
+                <div class="card h-100">
+                    <img src="https://s3.ap-northeast-2.amazonaws.com/materials.spartacodingclub.kr/webjong/ive.jpg" class="card-img-top" alt="..." />
+                </div>
+            </button>
         </div>
         <div class="col" style="padding-right: 20px">
+            <!-- Button trigger modal -->
+            <button type="button" class="" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <div class="card h-100">
+                    <img src="https://s3.ap-northeast-2.amazonaws.com/materials.spartacodingclub.kr/webjong/ive.jpg" class="card-img-top" alt="..." />
+                </div>
+            </button>
             <!-- Button trigger modal -->
             <button type="button" class="" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 <div class="card h-100">
@@ -129,6 +158,65 @@
             </div>
         </div>
         {%endfor%}
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous">
+
+</script>
+<script>
+    // 삭제 다이얼로그
+    // 삭제 버튼 클릭시 다이얼로그 처리
+    const delete_elements = document.getElementsByClassName("delete");
+    Array.from(delete_elements).forEach(function(element) {
+        element.addEventListener('click', function(event) {
+            if (confirm("정말 삭제하시겠습니까?")) {
+                // 데이터를 삭제후 탑 페이지로 이동
+                location.href = this.dataset.uri;
+            } else {
+                // 취소 버튼을 클릭한 경우에 대한 처리
+                event.preventDefault();
+            }
+        });
+    });
+    // 스크롤 이동 기능
+    // 클래스, 아이디 값을 인자로 받아 offsetTop 밸류 초기화
+    // 초기화된 offsetTop 값을 위치로 이동
+    function goToScroll(name) {
+        var location = document.querySelector('.' + name).offsetTop
+        window.scrollTo({ top: location, behavior: 'smooth' })
+    }
+    // 댓글 작성 버튼 클릭시 댓글 창 활성화
+    function toggleCommentForm(button) {
+        var commentForm = button.parentNode.nextElementSibling;
+        if (commentForm.style.display === 'none' || commentForm.style.display === '') {
+            commentForm.style.display = 'block';
+        } else {
+            commentForm.style.display = 'none';
+        }
+    }
+    // 댓글 추가 기능
+    function addComment(event, noticeID) {
+        event.preventDefault();
+        var commentInput = event.target.querySelector("input");
+        var commentText = commentInput.value;
+        var date = new Date().toLocaleString();
+        var commentDiv = document.createElement("div");
+        commentDiv.className = "card my-3";
+        commentDiv.innerHTML = `
+            <div class="card-body">
+                <p class="card-text">${commentText}</p>
+                <p class="card-text"><small class="text-muted">${date}</small></p>
+            </div>
+        `;
+
+        var commentsDiv = event.target.parentNode.querySelector(".comments");
+        commentsDiv.insertBefore(commentDiv, commentsDiv.firstChild);
+
+        commentInput.value = "";
+    }
+
+</script>
+</body>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous">
