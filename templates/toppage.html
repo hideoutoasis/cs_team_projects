@@ -45,30 +45,55 @@
             </button>
         </div>
     </div>
-    <!-- 게시글 작성 화면(Modal) -->
+    <!-- Modal exampleModal_create -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">게시글 작성</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ url_for('post_create') }}" method="GET">
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">제목</label>
-                            <input type="text" class="form-control" id="exampleInputPassword1" name="noticeTitle" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">내용</label>
-                            <textarea style="height: 300px" input type="text" class="form-control" id="exampleInputPassword1" name="noticeContents"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">작성</button>
-                    </form>
-                </div>
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">게시글 작성</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action="{{ url_for('post_create') }}" method="GET">
+                  <div class="mb-3">
+                      <label for="exampleInputPassword1_create" class="form-label">제목</label>
+                      <input type="text" class="form-control" id="exampleInputPassword1_create" name="noticeTitle" />
+                  </div>
+                  <div class="mb-3">
+                      <label for="exampleInputPassword1_create_content" class="form-label">내용</label>
+                      <textarea style="height: 300px" input type="text" class="form-control" id="exampleInputPassword1_create_content" name="noticeContents"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary">작성</button>
+                </form>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- Modal exampleModal_update -->
+  <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel2">게시글 수정</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% if notice %}{{ url_for('post_update', noticeID=notice.noticeID) }}{% endif %}" method="POST">
+                    <div class="mb-3">
+                        <label for="exampleInputPassword2_update" class="form-label">제목</label>
+                        <input type="text" class="form-control" id="exampleInputPassword2_update" name="noticeTitle" value="{% if notice %}{{ notice.noticeTitle }}{% endif %}" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword2_update_content" class="form-label">내용</label>
+                        <textarea style="height: 300px" input type="text" class="form-control" id="exampleInputPassword2_update_content" name="noticeContents">{% if notice %}{{ notice.noticeContents }}{% endif %}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">수정</button>
+                </form>
             </div>
         </div>
     </div>
+  </div>
+
     <!-- 게시판 화면(Card) -->
     <div class="row row-cols-1 row-cols-md-4 g-4 mx-auto w-75 pb-5" style="padding-top: 600px">
         {%for notice in data %}
@@ -76,14 +101,18 @@
             <div class="notice-scroll">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="notice-title">{{notice.noticeTitle}}</h5>
-                        <p class="notice-contents" style="overflow-y: overlay; height:200px">{{notice.noticeContents}}</p>
+                        <h5 class="notice-title">{{ notice.noticeTitle }}</h5>
+                        <p class="notice-contents" style="overflow-y: overlay; height:200px">{{ notice.noticeContents }}</p>
                         <div style="display: flex">
-                            <a href="#" class="btn btn-primary" style="margin-right: 10px">수정</a>
-                            <form action="{{ url_for('delete', noticeID=notice.noticeID) }}" style="margin-right: 10px">
-                                <button type="submit" class="btn btn-primary delete">삭제</button>
-                            </form>
-                            <button type="button" class="btn btn-primary" onclick="toggleCommentForm(this)">댓글 작성</button>
+                          <form action="{{ url_for('post_update', noticeID=notice.noticeID) }}" method="GET">
+                            <input type="hidden" name="noticeTitle" value="{{ notice.noticeTitle }}">
+                            <input type="hidden" name="noticeContents" value="{{ notice.noticeContents }}">
+                            <button type="submit" class="btn btn-primary" style="margin-right: 10px">수정</button>
+                          </form>
+                          <form action="{{ url_for('post_delete', noticeID = notice.noticeID) }}" style="margin-right: 10px">
+                            <button type="submit" class="btn btn-primary delete">삭제</button>
+                          </form>
+                          <button type="button" class="btn btn-primary" onclick="toggleCommentForm(this)">댓글 작성</button>
                         </div>           
                         <div class="comment-area" style="overflow-y: overlay; height:300px; border: 1px solid white; margin-top: 15px; display: none;">
                             <form onsubmit="addComment(event)">

@@ -41,11 +41,33 @@ def post_create():
     # 위에서부터 DB와 연결하여 데이터를 보내고, 테이블을 추가하고, 커밋하여 저장하는 기능을 합니다.
     # 커밋 코드는 html에서 데이터를 받아 반환해 주는(?) 기능을 합니다.
     # 마지막 코드는 자동 리다이렉트로 작성한 게시글이 바로바로 반영되게 만들어 줍니다.
-    
+
+
+@app.route('/toppage/update/<int:noticeID>', methods=['GET', 'POST'])
+def post_update(noticeID):
+    notice_edit = notice.query.get(noticeID)
+
+    if request.method == 'POST':
+        title_receive = request.form['noticeTitle']
+        content_receive = request.form['noticeContents']
+
+        notice_edit.noticeTitle = title_receive
+        notice_edit.noticeContents = content_receive
+
+        db.session.commit()
+
+        # 데이터를 수정한 후에는 수정된 데이터를 다시 불러와야 합니다.
+        data = notice.query.all()
+
+        return render_template('toppage.html', data=data)
+
+    # POST 요청이 아닌 경우에는 해당 페이지로 진입하지 못하도록 리디렉션합니다.
+    return redirect(url_for('toppage'))
+
 @app.route('/toppage/delete/<int:noticeID>')
 # noticeID 가 Null일 경우 처리
 # @app.route('/delete', defaults={'noticeID': None})
-def delete(noticeID):
+def post_delete(noticeID):
     notice_delete = notice.query.filter_by(noticeID=int(noticeID)).first()
 
     db.session.delete(notice_delete)
